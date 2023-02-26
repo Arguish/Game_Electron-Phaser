@@ -12,11 +12,13 @@
 
 - INIT
 - Configurar Electron JS
+- Phaser3 Cargado
   - -> _Configurar Phaser3_
 
 ---
 
-## Errores connocidos
+## Errores conocidos
 
-- Salta un warninng sobre seguridad web. No se como quitarlo.
+- Salta un warning sobre seguridad web. No se como quitarlo.
   - Sin resolver
+- El teclado de Javi pone "N" de mas. **CUIDADO**
