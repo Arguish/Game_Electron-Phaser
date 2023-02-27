@@ -17,6 +17,14 @@
 
 ---
 
+## Documentacion
+
+- [Setup Phaser3](https://storage.googleapis.com/assets.ourcade.co/books/Infinite_Jumper_Phaser3_Modern_JavaScript.pdf?ck_subscriber_id=2069688351)
+- [Electron Forge](https://www.electronforge.io/)
+- [GDD](https://www.figma.com/file/BbPybFKTaRKF4kqJK1eaTB/GDD?node-id=0%3A1&t=q5YVdGGZs2QbXo3I-1)
+
+---
+
 ## Errores conocidos
 
 - Salta un warning sobre seguridad web. No se como quitarlo.
