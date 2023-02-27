@@ -28,6 +28,5 @@
 
 ## Errores conocidos
 
-- Salta un warning sobre seguridad web. No se como quitarlo.
-  - Sin resolver
+- ![](./WarningsSnpashot/Screenshot%20from%202023-02-27%2009-17-58.png)
 - El teclado de Javi pone "N" de mas. **CUIDADO**
