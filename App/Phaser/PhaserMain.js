@@ -1,5 +1,6 @@
 import Phaser from "./lib/phaser.js";
 import Game from "./_Scenes/game.js";
+import GameOver from "./_Scenes/GameOver.js";
 
 //console.dir(Phaser);
 
@@ -8,7 +9,7 @@ const gameConfig = {
   parent: "gameDiv",
   width: 480,
   height: 640,
-  scene: Game,
+  scene: [Game, GameOver],
   physics: {
     default: "arcade",
     arcade: {
