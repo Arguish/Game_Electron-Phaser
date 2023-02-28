@@ -35,6 +35,11 @@ export default class Game extends Phaser.Scene {
       .setScale(0.5);
 
     this.physics.add.collider(platforms, this.player);
+    this.player.body.checkCollision.up = false;
+    this.player.body.checkCollision.left = false;
+    this.player.body.checkCollision.right = false;
+
+    this.cameras.main.startFollow(this.player);
   }
 
   update() {
