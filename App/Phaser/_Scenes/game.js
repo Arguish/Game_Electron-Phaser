@@ -19,55 +19,58 @@ export default class Game extends Phaser.Scene {
     this.carrotCollectedText.text = `Carrots: ${this.carrotsCollected}`;
   }
 
-  findBottomMostPlatform() {
-    const platforms = this.platforms.getChildren();
-    let bottomPlatform = platforms[0];
+  findBottomItemFrom(array) {
+    const group = array.getChildren();
+    let bottomFromGroup = group[0];
 
-    for (let i = 1; i < platforms.length; ++i) {
-      const platform = platforms[i];
+    for (let i = 1; i < group.length; ++i) {
+      const item = group[i];
 
-      // discard any platforms that are above current
-      if (platform.y < bottomPlatform.y) {
+      // discard any group that are above current
+      if (item.y < bottomFromGroup.y) {
         continue;
       }
 
-      bottomPlatform = platform;
+      bottomFromGroup = item;
     }
 
-    return bottomPlatform;
+    return bottomFromGroup;
   }
 
   /**
    * @param {Phaser.GameObjects.Sprite} sprite
    */
-  addAbove(sprite, somthing) {
-    /** @type {Phaser.Physics.Arcade.Sprite} */
-    const carrot = somthing.get(
-      sprite.x,
-      sprite.y - sprite.displayHeight,
-      "carrot"
-    );
-
-    carrot.setActive(true);
-    carrot.setVisible(true);
-
-    this.add.existing(carrot);
-
-    // update the physics body size
-    carrot.body.setSize(carrot.width, carrot.height);
-
-    // make sure body is enabed in the physics world
-    this.physics.world.enable(carrot);
-
-    return carrot;
-  }
 
   /** @type {Phaser.Physics.Arcade.Sprite} */
-  player;
-  platforms;
-  carrots;
+
   constructor() {
     super("game"); //Every Scene has to define a unique key. We do that on line 7 in the constructor by calling super('game').
+    this.player;
+    this.platforms;
+    this.carrots;
+    this.bottomPlatform;
+  }
+
+  addAbove(sprite, somthing, image) {
+    /** @type {Phaser.Physics.Arcade.Sprite} */
+    const thing = somthing.get(
+      sprite.x,
+      sprite.y - sprite.displayHeight,
+      image
+    );
+
+    thing.setActive(true);
+    thing.setVisible(true);
+
+    this.add.existing(thing);
+
+    // update the physics body size
+    thing.body.setSize(thing.width, thing.height);
+
+    // make sure body is enabed in the physics world
+    this.physics.world.enable(thing);
+
+    return thing;
   }
 
   preload() {
@@ -142,7 +145,7 @@ export default class Game extends Phaser.Scene {
         platform.body.updateFromGameObject();
 
         // create a carrot above the platform being reused
-        this.addAbove(platform, this.carrots);
+        this.addAbove(platform, this.carrots, "carrot");
       }
     });
 
@@ -175,8 +178,8 @@ export default class Game extends Phaser.Scene {
     }
     this.horizontalWrap(this.player);
 
-    const bottomPlatform = this.findBottomMostPlatform();
-    if (this.player.y > bottomPlatform.y + 200) {
+    this.bottomPlatform = this.findBottomItemFrom(this.platforms);
+    if (this.player.y > this.bottomPlatform.y + 200) {
       console.log("game over");
       this.scene.start("game-over");
     }

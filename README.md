@@ -29,6 +29,6 @@
 ## Errores conocidos
 
 - ![](./WarningsSnpashot/Screenshot%20from%202023-02-27%2009-17-58.png)
-- El teclado de Javi pone "N" de mas. **CUIDADO**
+
 - Las rutas de archivos deben hacerse teniendo en cuenta que al cargar desde el HTML, la ruta relativa debe ser desde este, no desde el js...
   - Lo ideal seria buscar una forma de hacer un cargador de archivos o algo asi que sea mas facil de referenciar durante el codigo.
