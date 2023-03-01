@@ -40,11 +40,13 @@ export default class Game extends Phaser.Scene {
   /**
    * @param {Phaser.GameObjects.Sprite} sprite
    */
-  addCarrotAbove(sprite) {
-    const y = sprite.y - sprite.displayHeight;
-
+  addAbove(sprite, somthing) {
     /** @type {Phaser.Physics.Arcade.Sprite} */
-    const carrot = this.carrots.get(sprite.x, y, "carrot");
+    const carrot = somthing.get(
+      sprite.x,
+      sprite.y - sprite.displayHeight,
+      "carrot"
+    );
 
     carrot.setActive(true);
     carrot.setVisible(true);
@@ -140,7 +142,7 @@ export default class Game extends Phaser.Scene {
         platform.body.updateFromGameObject();
 
         // create a carrot above the platform being reused
-        this.addCarrotAbove(platform);
+        this.addAbove(platform, this.carrots);
       }
     });
 
