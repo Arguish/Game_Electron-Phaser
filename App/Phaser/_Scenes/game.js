@@ -11,7 +11,7 @@ export default class Game extends Phaser.Scene {
    */
   handleCollectCarrot(player, carrot) {
     // hide from display
-    this.carrots.killAndHide(carrot);
+    this.GroupOfCarrots.killAndHide(carrot);
 
     // disable from physics world
     this.physics.world.disableBody(carrot.body);
@@ -19,6 +19,19 @@ export default class Game extends Phaser.Scene {
     this.carrotCollectedText.text = `Carrots: ${this.carrotsCollected}`;
   }
 
+  /**
+   * @param {Phaser.GameObjects.Sprite} sprite
+   */
+
+  /** @type {Phaser.Physics.Arcade.Sprite} */
+
+  constructor() {
+    super("game"); //Every Scene has to define a unique key. We do that on line 7 in the constructor by calling super('game').
+    this.player;
+    this.GroupOfPlatforms;
+    this.GroupOfCarrots;
+    this.bottomPlatform;
+  }
   findBottomItemFrom(array) {
     const group = array.getChildren();
     let bottomFromGroup = group[0];
@@ -36,21 +49,6 @@ export default class Game extends Phaser.Scene {
 
     return bottomFromGroup;
   }
-
-  /**
-   * @param {Phaser.GameObjects.Sprite} sprite
-   */
-
-  /** @type {Phaser.Physics.Arcade.Sprite} */
-
-  constructor() {
-    super("game"); //Every Scene has to define a unique key. We do that on line 7 in the constructor by calling super('game').
-    this.player;
-    this.platforms;
-    this.carrots;
-    this.bottomPlatform;
-  }
-
   addAbove(sprite, somthing, image) {
     /** @type {Phaser.Physics.Arcade.Sprite} */
     const thing = somthing.get(
@@ -72,6 +70,20 @@ export default class Game extends Phaser.Scene {
 
     return thing;
   }
+  instanciateSome(num, group, image, xmin, xmax, every) {
+    for (let i = 0; i < num; ++i) {
+      const x = Phaser.Math.Between(xmin, xmax);
+      const y = every * i;
+
+      /** @type {Phaser.Physics.Arcade.Sprite} */
+      const item = group.create(x, y, image);
+      item.scale = 0.5;
+
+      /** @type {Phaser.Physics.Arcade.StaticBody} */
+      const body = item.body;
+      body.updateFromGameObject();
+    }
+  }
 
   preload() {
     this.load.image("background", "../Phaser/Assets/Test/bg_layer1.png");
@@ -84,25 +96,15 @@ export default class Game extends Phaser.Scene {
   create() {
     this.add.image(240, 320, "background").setScrollFactor(1, 0);
 
-    this.platforms = this.physics.add.staticGroup();
+    this.GroupOfPlatforms = this.physics.add.staticGroup();
 
-    for (let i = 0; i < 5; ++i) {
-      const x = Phaser.Math.Between(100, 300);
-      const y = 150 * i;
+    this.instanciateSome(5, this.GroupOfPlatforms, "platform", 100, 300, 150);
 
-      /** @type {Phaser.Physics.Arcade.Sprite} */
-      const platform = this.platforms.create(x, y, "platform");
-      platform.scale = 0.5;
-
-      /** @type {Phaser.Physics.Arcade.StaticBody} */
-      const body = platform.body;
-      body.updateFromGameObject();
-    }
     this.player = this.physics.add
       .sprite(240, 320, "bunny-stand")
       .setScale(0.5);
 
-    this.physics.add.collider(this.platforms, this.player);
+    this.physics.add.collider(this.GroupOfPlatforms, this.player);
     this.player.body.checkCollision.up = false;
     this.player.body.checkCollision.left = false;
     this.player.body.checkCollision.right = false;
@@ -112,16 +114,16 @@ export default class Game extends Phaser.Scene {
     this.cameras.main.setDeadzone(this.scale.width * 1.5);
 
     //Carrot
-    const carrot = new Carrot(this, 240, 320, "carrot");
-    this.add.existing(carrot);
-    this.carrots = this.physics.add.group({
+    //Aqui se establece el gameObject del cual se iran intanciando copias dentro del "group"
+    this.GroupOfCarrots = this.physics.add.group({
       classType: Carrot,
     });
-    this.carrots.get(240, 320, "carrot");
-    this.physics.add.collider(this.platforms, this.carrots);
+
+    this.physics.add.collider(this.GroupOfPlatforms, this.GroupOfCarrots);
+
     this.physics.add.overlap(
       this.player,
-      this.carrots,
+      this.GroupOfCarrots,
       this.handleCollectCarrot,
       undefined,
       this
@@ -135,7 +137,7 @@ export default class Game extends Phaser.Scene {
   }
 
   update(t, dt) {
-    this.platforms.children.iterate((child) => {
+    this.GroupOfPlatforms.children.iterate((child) => {
       /** @type {Phaser.Physics.Arcade.Sprite} */
       const platform = child;
 
@@ -145,11 +147,11 @@ export default class Game extends Phaser.Scene {
         platform.body.updateFromGameObject();
 
         // create a carrot above the platform being reused
-        this.addAbove(platform, this.carrots, "carrot");
+        this.addAbove(platform, this.GroupOfCarrots, "carrot");
       }
     });
 
-    this.platforms.children.iterate((child) => {
+    this.GroupOfPlatforms.children.iterate((child) => {
       /** @type {Phaser.Physics.Arcade.Sprite} */
       const platform = child;
 
@@ -178,7 +180,7 @@ export default class Game extends Phaser.Scene {
     }
     this.horizontalWrap(this.player);
 
-    this.bottomPlatform = this.findBottomItemFrom(this.platforms);
+    this.bottomPlatform = this.findBottomItemFrom(this.GroupOfPlatforms);
     if (this.player.y > this.bottomPlatform.y + 200) {
       console.log("game over");
       this.scene.start("game-over");
