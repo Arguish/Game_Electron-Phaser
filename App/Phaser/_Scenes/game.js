@@ -19,12 +19,6 @@ export default class Game extends Phaser.Scene {
     this.carrotCollectedText.text = `Carrots: ${this.carrotsCollected}`;
   }
 
-  /**
-   * @param {Phaser.GameObjects.Sprite} sprite
-   */
-
-  /** @type {Phaser.Physics.Arcade.Sprite} */
-
   constructor() {
     super("game"); //Every Scene has to define a unique key. We do that on line 7 in the constructor by calling super('game').
     this.player;
@@ -32,6 +26,7 @@ export default class Game extends Phaser.Scene {
     this.GroupOfCarrots;
     this.bottomPlatform;
   }
+
   findBottomItemFrom(array) {
     const group = array.getChildren();
     let bottomFromGroup = group[0];
@@ -49,6 +44,7 @@ export default class Game extends Phaser.Scene {
 
     return bottomFromGroup;
   }
+
   addAbove(sprite, somthing, image) {
     /** @type {Phaser.Physics.Arcade.Sprite} */
     const thing = somthing.get(
@@ -70,6 +66,7 @@ export default class Game extends Phaser.Scene {
 
     return thing;
   }
+
   instanciateSome(num, group, image, xmin, xmax, every) {
     for (let i = 0; i < num; ++i) {
       const x = Phaser.Math.Between(xmin, xmax);
@@ -83,6 +80,18 @@ export default class Game extends Phaser.Scene {
       const body = item.body;
       body.updateFromGameObject();
     }
+  }
+
+  tpPlatforms(ymin, ymax) {
+    this.GroupOfPlatforms.children.iterate((platform) => {
+      if (platform.y >= this.cameras.main.scrollY + 700) {
+        platform.y =
+          this.cameras.main.scrollY - Phaser.Math.Between(ymin, ymax);
+        platform.body.updateFromGameObject();
+        // create a carrot above the platform being reused
+        this.addAbove(platform, this.GroupOfCarrots, "carrot");
+      }
+    });
   }
 
   preload() {
@@ -137,30 +146,8 @@ export default class Game extends Phaser.Scene {
   }
 
   update(t, dt) {
-    this.GroupOfPlatforms.children.iterate((child) => {
-      /** @type {Phaser.Physics.Arcade.Sprite} */
-      const platform = child;
+    this.tpPlatforms(50, 80);
 
-      const scrollY = this.cameras.main.scrollY;
-      if (platform.y >= scrollY + 700) {
-        platform.y = scrollY - Phaser.Math.Between(50, 100);
-        platform.body.updateFromGameObject();
-
-        // create a carrot above the platform being reused
-        this.addAbove(platform, this.GroupOfCarrots, "carrot");
-      }
-    });
-
-    this.GroupOfPlatforms.children.iterate((child) => {
-      /** @type {Phaser.Physics.Arcade.Sprite} */
-      const platform = child;
-
-      const scrollY = this.cameras.main.scrollY;
-      if (platform.y >= scrollY + 700) {
-        platform.y = scrollY - Phaser.Math.Between(50, 100);
-        platform.body.updateFromGameObject();
-      }
-    });
     // find out from Arcade Physics if the player's physics body
     // is touching something below it
     const touchingDown = this.player.body.touching.down;
