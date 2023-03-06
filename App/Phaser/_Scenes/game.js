@@ -110,14 +110,8 @@ export default class Game extends Phaser.Scene {
 
     this.instanciateSome(5, this.GroupOfPlatforms, "platform", 100, 300, 150);
 
-    this.player = this.physics.add
-      .sprite(240, 320, "bunny-stand")
-      .setScale(0.5);
-
-    this.physics.add.collider(this.GroupOfPlatforms, this.player);
-    this.player.body.checkCollision.up = false;
-    this.player.body.checkCollision.left = false;
-    this.player.body.checkCollision.right = false;
+    this.player = new Pawn(this, 240, 320, "bunny-stand");
+    this.player.addColision(this.GroupOfPlatforms);
 
     this.cameras.main.startFollow(this.player);
     // set the horizontal dead zone to 1.5x game width
@@ -130,14 +124,7 @@ export default class Game extends Phaser.Scene {
     });
 
     this.physics.add.collider(this.GroupOfPlatforms, this.GroupOfCarrots);
-
-    this.physics.add.overlap(
-      this.player,
-      this.GroupOfCarrots,
-      this.handleCollectCarrot,
-      undefined,
-      this
-    );
+    this.player.addOverlap(this.GroupOfCarrots, this.handleCollectCarrot);
 
     const style = { color: "#000", fontSize: 24 };
     this.carrotCollectedText = this.add
@@ -149,41 +136,12 @@ export default class Game extends Phaser.Scene {
   update(t, dt) {
     this.tpPlatforms(50, 80);
 
-    // find out from Arcade Physics if the player's physics body
-    // is touching something below it
-    const touchingDown = this.player.body.touching.down;
-
-    if (touchingDown) {
-      // this makes the bunny jump straight up
-      this.player.setVelocityY(-300);
-    }
-    // left and right input logic
-    if (this.cursors.left.isDown && !touchingDown) {
-      this.player.setVelocityX(-200);
-    } else if (this.cursors.right.isDown && !touchingDown) {
-      this.player.setVelocityX(200);
-    } else {
-      // stop movement if not left or right
-      this.player.setVelocityX(0);
-    }
-    this.horizontalWrap(this.player);
+    this.player.update();
 
     this.bottomPlatform = this.findBottomItemFrom(this.GroupOfPlatforms);
     if (this.player.y > this.bottomPlatform.y + 200) {
       console.log("game over");
       this.scene.start("game-over");
-    }
-  }
-  /**
-   * @param {Phaser.GameObjects.Sprite} sprite
-   */
-  horizontalWrap(sprite) {
-    const halfWidth = sprite.displayWidth * 0.5;
-    const gameWidth = this.scale.width;
-    if (sprite.x < -halfWidth) {
-      sprite.x = gameWidth + halfWidth;
-    } else if (sprite.x > gameWidth + halfWidth) {
-      sprite.x = -halfWidth;
     }
   }
 }
