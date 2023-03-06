@@ -18,6 +18,7 @@ export default class Game extends Phaser.Scene {
     this.physics.world.disableBody(carrot.body);
     this.carrotsCollected++;
     this.carrotCollectedText.text = `Carrots: ${this.carrotsCollected}`;
+    window.electronAPI.setTitle(this.carrotCollectedText.text);
   }
 
   constructor() {
