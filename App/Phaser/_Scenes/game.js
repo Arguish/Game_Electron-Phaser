@@ -1,6 +1,7 @@
 import Phaser from "../lib/phaser.js";
 import Carrot from "../__GameObjects/Carrot.js";
 import Pawn from "../__GameObjects/Player.js";
+import Spawner from "../__GameObjects/Spawner.js";
 
 export default class Game extends Phaser.Scene {
   carrotsCollected = 0;
