@@ -1,8 +1,8 @@
 import Phaser from "../lib/phaser.js";
 
 export default class Spawner extends Phaser.Physics.Arcade.Group {
-  constructor() {
-    super();
+  constructor(world, scene, children) {
+    super(world, scene, children);
   }
   addCollider(obj) {
     this.scene.physics.add.collider(this, obj);

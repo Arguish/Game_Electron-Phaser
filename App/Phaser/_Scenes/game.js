@@ -2,6 +2,7 @@ import Phaser from "../lib/phaser.js";
 import Carrot from "../__GameObjects/Carrot.js";
 import Pawn from "../__GameObjects/Player.js";
 import Spawner from "../__GameObjects/Spawner.js";
+import Coin from "../__GameObjects/Coin.js";
 
 export default class Game extends Phaser.Scene {
   carrotsCollected = 0;
@@ -28,6 +29,7 @@ export default class Game extends Phaser.Scene {
     this.GroupOfPlatforms;
     this.GroupOfCarrots;
     this.bottomPlatform;
+    this.coinSpawner;
   }
 
   findBottomItemFrom(array) {
@@ -102,6 +104,7 @@ export default class Game extends Phaser.Scene {
     this.load.image("platform", "../Phaser/Assets/Test/ground_grass.png");
     this.load.image("bunny-stand", "../Phaser/Assets/Test/bunny2_stand.png");
     this.load.image("carrot", "../Phaser/Assets/Test/carrot.png");
+    this.load.image("coin", "../Phaser/Assets/Test/bronze_1.png");
     this.cursors = this.input.keyboard.createCursorKeys();
   }
 
@@ -133,6 +136,10 @@ export default class Game extends Phaser.Scene {
       .text(240, 10, "Carrots:0", style)
       .setScrollFactor(0)
       .setOrigin(0.5, 0);
+
+    //SPawner Coin
+    this.coinSpawner = new Spawner(null, this, Coin);
+    this.coinSpawner.create();
   }
 
   update(t, dt) {
