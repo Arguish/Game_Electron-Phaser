@@ -1,5 +1,11 @@
 # Game_Electron-Phaser
 
+## Proyecto Archivado:
+
+### Problemas con la documentacion de Phaser, Herencia de clase obtusas, requiere mas investigacion. (Falta de tiempo)
+
+---
+
 ## Proyecto de juego con:
 
 ![](https://upload.wikimedia.org/wikipedia/commons/9/91/Electron_Software_Framework_Logo.svg)
@@ -13,9 +19,10 @@
 - INIT
 - Configurar Electron JS
 - Phaser3 Cargado
-  - -> _Configurar Phaser3_
-
----
+- Phaser3 Configurado
+- Proyecto Phaser online
+- Probglemas con la documentacion
+- ***
 
 ## Documentacion
 
