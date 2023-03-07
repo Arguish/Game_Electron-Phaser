@@ -138,8 +138,7 @@ export default class Game extends Phaser.Scene {
       .setOrigin(0.5, 0);
 
     //SPawner Coin
-    this.coinSpawner = new Spawner(null, this, Coin);
-    this.coinSpawner.create();
+    this.coinSpawner = new Spawner(this, Coin);
   }
 
   update(t, dt) {
